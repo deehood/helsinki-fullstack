@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-comment-textnodes */
 import { useState } from "react";
 
 const App = () => {
@@ -17,26 +18,37 @@ const App = () => {
 
   return (
     <div>
+      <h2>Anecdote of the day</h2>
       <p>{anecdotes[selected]}</p>
       <p>has {points[selected]} votes</p>
-
       <button
         onClick={() => {
           newPoints = [...points];
           newPoints[selected] += 1;
           setPoints(newPoints);
+          // console.log(...newPoints, "max", Math.max(...newPoints));
         }}
       >
         vote
       </button>
-
       <button
-        onClick={() =>
-          setSelected(Math.floor(Math.random() * anecdotes.length))
-        }
+        onClick={() => {
+          //  finds random number between 0 and length
+          setSelected(Math.floor(Math.random() * anecdotes.length));
+        }}
       >
         next anecdote
       </button>
+      <h2>Anecdote with most votes</h2>
+      {Math.max(...points) === 0 ? (
+        <p>Waiting for first vote ....</p>
+      ) : (
+        <>
+          {/* finds index of max vote  */}
+          <p>{anecdotes[points.indexOf(Math.max(...points))]}</p>
+          <p>has {Math.max(...points)} votes</p>
+        </>
+      )}
     </div>
   );
 };
