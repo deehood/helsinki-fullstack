@@ -1,40 +1,4 @@
-const Course = ({ course }) => {
-  const Total = ({ parts }) => {
-    const total = parts.reduce((prev, cur) => prev + cur.exercises, 0);
-
-    return <p>Total of {total} exercises</p>;
-  };
-
-  const Header = ({ header }) => {
-    console.log();
-    return <h2>{header}</h2>;
-  };
-
-  const Content = ({ parts }) => {
-    const Part = ({ parts }) => {
-      return (
-        <ul>
-          {parts.map((part) => (
-            <li key={part.id}>
-              {part.name} .... {part.exercises}
-            </li>
-          ))}
-        </ul>
-      );
-    };
-
-    return <Part parts={parts} />;
-  };
-
-  console.log(course);
-  return (
-    <>
-      <Header header={course.name} />
-      <Content parts={course.parts} />
-      <Total parts={course.parts} />
-    </>
-  );
-};
+import Course from "./components/Course";
 
 const App = () => {
   const courses = [
@@ -81,7 +45,7 @@ const App = () => {
       ],
     },
   ];
-  console.log(courses);
+
   return courses.map((course) => <Course course={course} />);
 };
 
