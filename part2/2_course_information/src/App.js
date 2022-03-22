@@ -1,14 +1,8 @@
 const Course = ({ course }) => {
   const Total = ({ parts }) => {
-    console.log(parts);
+    const total = parts.reduce((prev, cur) => prev + cur.exercises, 0);
 
-    let sum = 0;
-
-    for (let i = 0; i < parts.length; i++) {
-      sum += parts[i].exercises;
-    }
-
-    return <p>Total of {sum} exercises</p>;
+    return <p>Total of {total} exercises</p>;
   };
 
   const Header = ({ header }) => {
