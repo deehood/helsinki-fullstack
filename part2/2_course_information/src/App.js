@@ -1,4 +1,16 @@
 const Course = ({ course }) => {
+  const Total = ({ parts }) => {
+    console.log(parts);
+
+    let sum = 0;
+
+    for (let i = 0; i < parts.length; i++) {
+      sum += parts[i].exercises;
+    }
+
+    return <p>Total of {sum} exercises</p>;
+  };
+
   const Header = ({ header }) => {
     return <h2>{header}</h2>;
   };
@@ -18,11 +30,11 @@ const Course = ({ course }) => {
 
     return <Part parts={parts} />;
   };
-
   return (
     <>
       <Header header={course.name} />
       <Content parts={course.parts} />
+      <Total parts={course.parts} />
     </>
   );
 };
