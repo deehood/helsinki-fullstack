@@ -24,7 +24,6 @@ const App = () => {
       >
         next anecdote
       </button>
-      {selected}
     </div>
   );
 };
