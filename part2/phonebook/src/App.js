@@ -1,10 +1,6 @@
 import { useState } from "react";
 
-const Filter = ({ filter, setFilter }) => {
-  const handleFilter = (event) => {
-    setFilter(event.target.value);
-  };
-
+const Filter = ({ filter, handleFilter }) => {
   return (
     <>
       filter shown with{" "}
@@ -14,6 +10,50 @@ const Filter = ({ filter, setFilter }) => {
         type="text"
         placeholder="search ..."
       />
+    </>
+  );
+};
+
+const PersonForm = ({
+  newName,
+  newNumber,
+  handleChangeName,
+  handleChangeNumber,
+  handleSubmitName,
+}) => {
+  return (
+    <form>
+      <div>
+        name: <input onChange={handleChangeName} value={newName} />
+      </div>
+      <div>
+        number: <input onChange={handleChangeNumber} value={newNumber} />
+      </div>
+      <div>
+        <button type="submit" onClick={handleSubmitName}>
+          add
+        </button>
+      </div>
+    </form>
+  );
+};
+
+const Person = ({ person }) => (
+  <p>
+    {person.id} {person.name} {person.number}
+  </p>
+);
+
+const Persons = ({ persons, filter }) => {
+  return (
+    <>
+      {persons
+        .filter((person) =>
+          person.name.toLowerCase().includes(filter.toLowerCase())
+        )
+        .map((person) => (
+          <Person key={person.id} person={person} />
+        ))}
     </>
   );
 };
@@ -33,6 +73,9 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
 
+  const handleFilter = (event) => {
+    setFilter(event.target.value);
+  };
   const handleChangeName = (event) => {
     setNewName(event.target.value);
   };
@@ -62,31 +105,19 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
-      <Filter filter={filter} setFilter={setFilter} />
+      <Filter filter={filter} handleFilter={handleFilter} />
 
-      <form>
-        <div>
-          name: <input onChange={handleChangeName} value={newName} />
-        </div>
-        <div>
-          number: <input onChange={handleChangeNumber} value={newNumber} />
-        </div>
-        <div>
-          <button type="submit" onClick={handleSubmitName}>
-            add
-          </button>
-        </div>
-      </form>
+      <h3>Add a new</h3>
+      <PersonForm
+        newName={newName}
+        newNumber={newNumber}
+        handleChangeName={handleChangeName}
+        handleChangeNumber={handleChangeNumber}
+        handleSubmitName={handleSubmitName}
+      />
+
       <h2>Numbers</h2>
-      {persons
-        .filter((person) =>
-          person.name.toLowerCase().includes(filter.toLowerCase())
-        )
-        .map((person) => (
-          <p key={person.id}>
-            {person.id} {person.name} {person.number}
-          </p>
-        ))}
+      <Persons persons={persons} filter={filter} />
     </div>
   );
 };
