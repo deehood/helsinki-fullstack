@@ -1,5 +1,23 @@
 import { useState } from "react";
 
+const Filter = ({ filter, setFilter }) => {
+  const handleFilter = (event) => {
+    setFilter(event.target.value);
+  };
+
+  return (
+    <>
+      filter shown with{" "}
+      <input
+        onChange={handleFilter}
+        value={filter}
+        type="text"
+        placeholder="search ..."
+      />
+    </>
+  );
+};
+
 const App = () => {
   const [persons, setPersons] = useState([
     {
@@ -23,10 +41,6 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
-  const handleFilter = (event) => {
-    setFilter(event.target.value);
-  };
-
   const handleSubmitName = (event) => {
     event.preventDefault();
     console.log(persons.length);
@@ -47,13 +61,9 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      filter shown with{" "}
-      <input
-        onChange={handleFilter}
-        value={filter}
-        type="text"
-        placeholder="search ..."
-      />
+
+      <Filter filter={filter} setFilter={setFilter} />
+
       <form>
         <div>
           name: <input onChange={handleChangeName} value={newName} />
