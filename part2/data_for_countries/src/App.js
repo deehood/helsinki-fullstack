@@ -17,9 +17,9 @@ const Search = ({ search, handleSearch }) => {
 
 const Flag = ({ country }) => {
   const FLAG_URL = country.flags.png;
-  console.log(FLAG_URL);
+  // console.log(FLAG_URL);
 
-  return <img src={FLAG_URL} alt="" />;
+  return <img src={FLAG_URL} alt="flag" />;
 };
 
 const Country = ({ country }) => {
@@ -27,10 +27,6 @@ const Country = ({ country }) => {
 
   //create iterable array with languages
   for (let key in country.languages) languageArray.push(country.languages[key]);
-
-  console.log(languageArray);
-
-  // flags
 
   return (
     <>
@@ -51,11 +47,10 @@ const Country = ({ country }) => {
   );
 };
 
-const FoundCountries = ({ countries, search }) => {
+const FoundCountries = ({ countries, search, countrySetter }) => {
   const found = countries.filter((country) =>
     country.name.common.toLowerCase().includes(search.toLowerCase())
   );
-  console.log("Length", found.length, "found", found);
 
   if (found.length > 10) return <p>Too many matches</p>;
   else if (found.length === 1) return <Country country={found[0]} />;
@@ -67,7 +62,13 @@ const FoundCountries = ({ countries, search }) => {
             country.name.common.toLowerCase().includes(search.toLowerCase())
           )
           .map((country) => (
-            <p key={country.name.common}>{country.name.common}</p>
+            <p key={country.name.common}>
+              {country.name.common}{" "}
+              {/* button uses setter function in APP to setState   */}
+              <button onClick={() => countrySetter(country.name.common)}>
+                show {country.name.common}
+              </button>
+            </p>
           ))}
       </>
     );
@@ -77,6 +78,8 @@ function App() {
   const [search, setSearch] = useState("");
   const [countries, setCountries] = useState([]);
 
+  const countrySetter = (choice) => setSearch(choice);
+
   const handleSearch = (event) => {
     setSearch(event.target.value);
   };
@@ -85,7 +88,7 @@ function App() {
     () =>
       axios.get("https://restcountries.com/v3.1/all").then((response) => {
         setCountries(response.data);
-        console.log(response.data);
+        // console.log(response.data);
       }),
     []
   );
@@ -93,7 +96,11 @@ function App() {
   return (
     <div>
       <Search search={search} handleSearch={handleSearch} />
-      <FoundCountries search={search} countries={countries} />
+      <FoundCountries
+        search={search}
+        countries={countries}
+        countrySetter={countrySetter}
+      />
     </div>
   );
 }
