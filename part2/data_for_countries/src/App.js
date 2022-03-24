@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { setSelectionRange } from "@testing-library/user-event/dist/utils";
 
 const Search = ({ search, handleSearch }) => {
   return (
@@ -22,6 +23,44 @@ const Flag = ({ country }) => {
   return <img src={FLAG_URL} alt="flag" />;
 };
 
+const WeatherIcon = (icon) => {
+  const iconUrl = `https://openweathermap.org/img/wn/${icon.icon}@2x.png`;
+
+  return <img src={iconUrl} />;
+};
+
+const Weather = ({ country }) => {
+  const [weather, setWeather] = useState([]);
+
+  const api_key = process.env.REACT_APP_API_KEY;
+  const capital = country.capital;
+  const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${capital}&appid=${api_key}`;
+
+  useEffect(
+    () =>
+      axios.get(weatherUrl).then((response) => {
+        console.log("promise fulfilled");
+        setWeather(response.data);
+      }),
+    []
+  );
+
+  console.log(URL);
+  console.log(weather);
+
+  return (
+    <>
+      {weather.main && (
+        <>
+          <p>temperature {(weather.main.temp - 273.15).toFixed(2)}º c</p>
+          <WeatherIcon icon={weather.weather[0].icon} />
+          <p>wind {weather.wind.speed.toFixed(2)} m/s</p>
+        </>
+      )}
+    </>
+  );
+};
+
 const Country = ({ country }) => {
   const languageArray = [];
 
@@ -33,7 +72,7 @@ const Country = ({ country }) => {
       <h2>{country.name.common}</h2>
 
       <p>capital {country.capital[0]}</p>
-      <p>area {country.area}</p>
+      <p>area {country.area} km² </p>
       <br />
 
       <p>languages :</p>
@@ -43,11 +82,12 @@ const Country = ({ country }) => {
         ))}
       </ul>
       <Flag country={country} />
+      <Weather country={country} />
     </>
   );
 };
 
-const FoundCountries = ({ countries, search, countrySetter }) => {
+const FoundCountries = ({ countries, search, searchSetter }) => {
   const found = countries.filter((country) =>
     country.name.common.toLowerCase().includes(search.toLowerCase())
   );
@@ -65,7 +105,7 @@ const FoundCountries = ({ countries, search, countrySetter }) => {
             <p key={country.name.common}>
               {country.name.common}{" "}
               {/* button uses setter function in APP to setState   */}
-              <button onClick={() => countrySetter(country.name.common)}>
+              <button onClick={() => searchSetter(country.name.common)}>
                 show {country.name.common}
               </button>
             </p>
@@ -78,7 +118,7 @@ function App() {
   const [search, setSearch] = useState("");
   const [countries, setCountries] = useState([]);
 
-  const countrySetter = (choice) => setSearch(choice);
+  const searchSetter = (choice) => setSearch(choice);
 
   const handleSearch = (event) => {
     setSearch(event.target.value);
@@ -99,7 +139,7 @@ function App() {
       <FoundCountries
         search={search}
         countries={countries}
-        countrySetter={countrySetter}
+        searchSetter={searchSetter}
       />
     </div>
   );
