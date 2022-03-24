@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { renderIntoDocument } from "react-dom/test-utils";
 
 const Search = ({ search, handleSearch }) => {
   return (
@@ -16,28 +15,38 @@ const Search = ({ search, handleSearch }) => {
   );
 };
 
+const Flag = ({ country }) => {
+  const FLAG_URL = country.flags.png;
+  console.log(FLAG_URL);
+
+  return <img src={FLAG_URL} alt="" />;
+};
+
 const Country = ({ country }) => {
-  console.log(country);
-  console.log(country[0].languages);
   const languageArray = [];
 
-  for (let [key, value] of Object.entries(country[0].languages))
-    languageArray.push(value);
+  //create iterable array with languages
+  for (let key in country.languages) languageArray.push(country.languages[key]);
+
+  console.log(languageArray);
+
+  // flags
 
   return (
     <>
-      <h2>{country[0].name.common}</h2>
+      <h2>{country.name.common}</h2>
 
-      <p>capital {country[0].capital[0]}</p>
-      <p>area {country[0].area}</p>
+      <p>capital {country.capital[0]}</p>
+      <p>area {country.area}</p>
       <br />
+
       <p>languages :</p>
       <ul>
         {languageArray.map((language) => (
-          <li>{language}</li>
+          <li key={language}>{language}</li>
         ))}
       </ul>
-      <img src=""></img>
+      <Flag country={country} />
     </>
   );
 };
@@ -49,7 +58,7 @@ const FoundCountries = ({ countries, search }) => {
   console.log("Length", found.length, "found", found);
 
   if (found.length > 10) return <p>Too many matches</p>;
-  else if (found.length === 1) return <Country country={found} />;
+  else if (found.length === 1) return <Country country={found[0]} />;
   else
     return (
       <>
