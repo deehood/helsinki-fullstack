@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+
+import personService from "./services/persons.js";
 
 const Filter = ({ filter, handleFilter }) => {
   return (
@@ -40,8 +41,8 @@ const PersonForm = ({
 };
 
 const Person = ({ person }) => (
-  <p>
-    {person.id} {person.name} {person.number}
+  <p key={person.id}>
+    {person.name} {person.number}
   </p>
 );
 
@@ -53,7 +54,7 @@ const Persons = ({ persons, filter }) => {
           person.name.toLowerCase().includes(filter.toLowerCase())
         )
         .map((person) => (
-          <Person key={person.id} person={person} />
+          <Person person={person} />
         ))}
     </>
   );
@@ -61,12 +62,10 @@ const Persons = ({ persons, filter }) => {
 
 const App = () => {
   useEffect(() => {
-    const promise = axios
-      .get("http://localhost:3001/persons")
-      .then((response) => {
-        console.log(response);
-        setPersons(response.data);
-      });
+    personService.getAll().then((initialPersons) => {
+      console.log(initialPersons);
+      setPersons(initialPersons);
+    });
   }, []);
 
   const [persons, setPersons] = useState([]);
@@ -97,12 +96,10 @@ const App = () => {
     if (persons.some((x) => x.name === personObj.name))
       alert(`${personObj.name} is already added to the phonebook`);
     else
-      axios
-        .post("http://localhost:3001/persons", personObj)
-        .then((response) => {
-          console.log(response.data);
-          setPersons(persons.concat(personObj));
-        });
+      personService.create(personObj).then((returnedPerson) => {
+        console.log(returnedPerson);
+        setPersons(persons.concat(personObj));
+      });
 
     setNewName("");
     setNewNumber("");
@@ -124,7 +121,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons persons={persons} filter={filter} />
+      <Persons key={persons.id} persons={persons} filter={filter} />
     </div>
   );
 };
