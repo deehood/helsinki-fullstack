@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import DeleteButton from "./components/DeleteButton.js";
 import personService from "./services/persons.js";
 
 const Filter = ({ filter, handleFilter }) => {
@@ -40,13 +40,16 @@ const PersonForm = ({
   );
 };
 
-const Person = ({ person }) => (
-  <p key={person.id}>
-    {person.name} {person.number}
-  </p>
-);
+const Person = ({ person, handleDelete }) => {
+  return (
+    <div>
+      {person.name} {person.number}{" "}
+      <DeleteButton handleDelete={handleDelete} person={person} />
+    </div>
+  );
+};
 
-const Persons = ({ persons, filter }) => {
+const Persons = ({ persons, filter, handleDelete }) => {
   return (
     <>
       {persons
@@ -54,7 +57,11 @@ const Persons = ({ persons, filter }) => {
           person.name.toLowerCase().includes(filter.toLowerCase())
         )
         .map((person) => (
-          <Person person={person} />
+          <Person
+            key={persons.id}
+            person={person}
+            handleDelete={handleDelete}
+          />
         ))}
     </>
   );
@@ -63,7 +70,7 @@ const Persons = ({ persons, filter }) => {
 const App = () => {
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
-      console.log(initialPersons);
+      // console.log(initialPersons);
       setPersons(initialPersons);
     });
   }, []);
@@ -72,6 +79,13 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+
+  const handleDelete = (id) => {
+    const temp = persons.filter((person) => person.id !== id);
+    // console.log(persons);
+    // console.log(temp);
+    setPersons(temp);
+  };
 
   const handleFilter = (event) => {
     setFilter(event.target.value);
@@ -86,7 +100,7 @@ const App = () => {
 
   const handleSubmitName = (event) => {
     event.preventDefault();
-    console.log(persons.length);
+    // console.log(persons.length);
 
     const personObj = {
       name: newName,
@@ -97,7 +111,7 @@ const App = () => {
       alert(`${personObj.name} is already added to the phonebook`);
     else
       personService.create(personObj).then((returnedPerson) => {
-        console.log(returnedPerson);
+        // console.log(returnedPerson);
         setPersons(persons.concat(personObj));
       });
 
@@ -121,7 +135,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons key={persons.id} persons={persons} filter={filter} />
+      <Persons persons={persons} filter={filter} handleDelete={handleDelete} />
     </div>
   );
 };
