@@ -1,76 +1,14 @@
+import React from "react";
 import { useState, useEffect } from "react";
-import DeleteButton from "./components/DeleteButton.js";
+
+import Filter from "./components/Filter";
+import PersonList from "./components/List/PersonList";
+import PersonForm from "./components/PersonForm";
 import personService from "./services/persons.js";
-
-const Filter = ({ filter, handleFilter }) => {
-  return (
-    <>
-      filter shown with{" "}
-      <input
-        onChange={handleFilter}
-        value={filter}
-        type="text"
-        placeholder="search ..."
-      />
-    </>
-  );
-};
-
-const PersonForm = ({
-  newName,
-  newNumber,
-  handleChangeName,
-  handleChangeNumber,
-  handleSubmitName,
-}) => {
-  return (
-    <form>
-      <div>
-        name: <input onChange={handleChangeName} value={newName} />
-      </div>
-      <div>
-        number: <input onChange={handleChangeNumber} value={newNumber} />
-      </div>
-      <div>
-        <button type="submit" onClick={handleSubmitName}>
-          add
-        </button>
-      </div>
-    </form>
-  );
-};
-
-const Person = ({ person, handleDelete }) => {
-  return (
-    <div>
-      {person.name} {person.number}{" "}
-      <DeleteButton handleDelete={handleDelete} person={person} />
-    </div>
-  );
-};
-
-const Persons = ({ persons, filter, handleDelete }) => {
-  return (
-    <>
-      {persons
-        .filter((person) =>
-          person.name.toLowerCase().includes(filter.toLowerCase())
-        )
-        .map((person) => (
-          <Person
-            key={persons.id}
-            person={person}
-            handleDelete={handleDelete}
-          />
-        ))}
-    </>
-  );
-};
 
 const App = () => {
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
-      // console.log(initialPersons);
       setPersons(initialPersons);
     });
   }, []);
@@ -82,8 +20,6 @@ const App = () => {
 
   const handleDelete = (id) => {
     const temp = persons.filter((person) => person.id !== id);
-    // console.log(persons);
-    // console.log(temp);
     setPersons(temp);
   };
 
@@ -100,7 +36,6 @@ const App = () => {
 
   const handleSubmitName = (event) => {
     event.preventDefault();
-    // console.log(persons.length);
 
     const personObj = {
       name: newName,
@@ -111,7 +46,6 @@ const App = () => {
       alert(`${personObj.name} is already added to the phonebook`);
     else
       personService.create(personObj).then((returnedPerson) => {
-        // console.log(returnedPerson);
         setPersons(persons.concat(personObj));
       });
 
@@ -135,7 +69,11 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons persons={persons} filter={filter} handleDelete={handleDelete} />
+      <PersonList
+        persons={persons}
+        filter={filter}
+        handleDelete={handleDelete}
+      />
     </div>
   );
 };
