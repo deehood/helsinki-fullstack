@@ -9,4 +9,4 @@ const PersonLine = ({ person, handleDelete }) => {
     </div>
   );
 };
-export default { PersonLine };
+export default PersonLine;

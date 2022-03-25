@@ -13,4 +13,4 @@ const Filter = ({ filter, handleFilter }) => {
   );
 };
 
-export default { Filter };
+export default Filter;

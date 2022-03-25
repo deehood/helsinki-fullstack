@@ -18,4 +18,4 @@ const PersonList = ({ persons, filter, handleDelete }) => {
   );
 };
 
-export default { PersonList };
+export default PersonList;

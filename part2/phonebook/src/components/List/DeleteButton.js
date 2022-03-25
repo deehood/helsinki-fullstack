@@ -14,4 +14,4 @@ const DeleteButton = ({ person, handleDelete }) => {
   return <button onClick={handleDeleteButton}> delete</button>;
 };
 
-export default { DeleteButton };
+export default DeleteButton;

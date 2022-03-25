@@ -24,4 +24,4 @@ const PersonForm = ({
   );
 };
 
-export default { PersonForm };
+export default PersonForm;
