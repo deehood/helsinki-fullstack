@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios, { Axios } from "axios";
+import axios from "axios";
 
 const Filter = ({ filter, handleFilter }) => {
   return (
@@ -88,15 +88,21 @@ const App = () => {
   const handleSubmitName = (event) => {
     event.preventDefault();
     console.log(persons.length);
+
     const personObj = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
     };
 
-    persons.some((x) => x.name === personObj.name)
-      ? alert(`${personObj.name} is already added to the phonebook`)
-      : setPersons(persons.concat(personObj));
+    if (persons.some((x) => x.name === personObj.name))
+      alert(`${personObj.name} is already added to the phonebook`);
+    else
+      axios
+        .post("http://localhost:3001/persons", personObj)
+        .then((response) => {
+          console.log(response.data);
+          setPersons(persons.concat(personObj));
+        });
 
     setNewName("");
     setNewNumber("");
