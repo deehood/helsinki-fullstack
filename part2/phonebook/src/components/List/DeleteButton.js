@@ -1,5 +1,5 @@
 import React from "react";
-import personService from "../services/persons.js";
+import personService from "../../services/persons.js";
 
 const DeleteButton = ({ person, handleDelete }) => {
   const handleDeleteButton = () => {
@@ -14,4 +14,4 @@ const DeleteButton = ({ person, handleDelete }) => {
   return <button onClick={handleDeleteButton}> delete</button>;
 };
 
-export default DeleteButton;
+export default { DeleteButton };
