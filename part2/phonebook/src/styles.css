@@ -1,0 +1,20 @@
+body {
+  padding: 0;
+}
+
+.message {
+  border-style: solid;
+  padding: 0.5rem;
+  background-color: #ccc;
+  margin-bottom: 0.5rem;
+}
+
+.normalMessage {
+  border-color: darkgreen;
+  color: darkgreen;
+}
+
+.errorMessage {
+  border-color: darkred;
+  color: darkred;
+}
