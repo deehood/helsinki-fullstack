@@ -11,39 +11,19 @@
       "id": 2
     },
     {
-      "name": "Dan Abramov",
-      "number": "12-43-234345",
-      "id": 3
-    },
-    {
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "id": 4
     },
     {
-      "name": "dad",
-      "number": "a",
-      "id": 17
-    },
-    {
       "name": "wonder",
-      "number": "12345",
+      "number": "123",
       "id": 21
     },
     {
       "name": "last",
-      "number": "123",
-      "id": 23
-    },
-    {
-      "name": "dad a",
-      "number": "",
-      "id": 24
-    },
-    {
-      "name": "test",
-      "number": "342",
-      "id": 25
+      "number": "1234565",
+      "id": 28
     }
   ]
 }

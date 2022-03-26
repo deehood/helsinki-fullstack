@@ -38,19 +38,39 @@ const App = () => {
     event.preventDefault();
 
     const personObj = {
-      name: newName,
-      number: newNumber,
+      name: newName.trim(),
+      number: newNumber.trim(),
     };
+    //  if name already in db return index
+    const index = persons.findIndex((x) => x.name === personObj.name);
 
-    if (persons.some((x) => x.name === personObj.name))
-      alert(`${personObj.name} is already added to the phonebook`);
-    else
-      personService.create(personObj).then((returnedPerson) => {
-        setPersons(persons.concat(personObj));
-      });
+    if (index === -1) {
+      // Person not found - create new record
+      personService
+        .create(personObj)
+        .then((returnedPerson) => setPersons(persons.concat(personObj)));
+      setNewName("");
+      setNewNumber("");
+    } else {
+      console.log(index);
+      console.log(persons[index].id, persons[index].name);
+      // modal to update record
+      const confirmed =
+        window.confirm(
+          `${personObj.name} is already added to the phonebook. Update the old number ?`
+        ) &&
+        personService.update(persons[index].id, personObj).then((response) => {
+          console.log(response);
+          const temp = [...persons];
+          temp[index].number = personObj.number;
+          setPersons(temp);
+        });
 
-    setNewName("");
-    setNewNumber("");
+      if (confirmed) {
+        setNewName("");
+        setNewNumber("");
+      }
+    }
   };
 
   return (
