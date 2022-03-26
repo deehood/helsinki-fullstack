@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import "./styles.css";
 
 import Filter from "./components/Filter";
+import Notification from "./components/Notification.js";
 import PersonList from "./components/List/PersonList";
 import PersonForm from "./components/PersonForm";
+
 import personService from "./services/persons.js";
 
 const App = () => {
@@ -16,21 +18,30 @@ const App = () => {
   const [message, setMessage] = useState(null);
   const [isError, setIsError] = useState(false);
 
-  const refreshPersons = () =>
-    personService.getAll().then((initialPersons) => setPersons(initialPersons));
-
+  // Page loading ...
   useEffect(() => {
     refreshPersons();
   }, []);
+
+  const refreshPersons = () =>
+    personService.getAll().then((initialPersons) => setPersons(initialPersons));
+
+  const handleFilter = (event) => {
+    setFilter(event.target.value);
+  };
+
+  const handleNotification = (text, isError) => {
+    setMessage(`${text}`);
+    setTimeout(() => setMessage(null), 2000);
+    isErrorSetter(isError);
+  };
+
+  const isErrorSetter = (error) => setIsError(error);
 
   const handleDelete = (id, name) => {
     const temp = persons.filter((person) => person.id !== id);
     handleNotification(`Deleted ${name} from phonebook`, false);
     setPersons(temp);
-  };
-
-  const handleFilter = (event) => {
-    setFilter(event.target.value);
   };
 
   const handleChangeName = (event) => {
@@ -41,15 +52,6 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
-  const isErrorSetter = (error) => setIsError(error);
-
-  const handleNotification = (text, isError) => {
-    setMessage(`${text}`);
-    setTimeout(() => setMessage(null), 2000);
-    isErrorSetter(isError);
-  };
-
-  // --------------------------------------------------------
   const handleSubmitName = (event) => {
     event.preventDefault();
 
@@ -64,7 +66,6 @@ const App = () => {
     if (index === -1) {
       // Person not found - create new record  - then get new id from axios returnPerson and send to state
       personService.create(personObj).then((returnedPerson) => {
-        // console.log(returnedPerson);
         setPersons(persons.concat(returnedPerson));
 
         handleNotification(`Added ${personObj.name}`, false);
@@ -103,13 +104,6 @@ const App = () => {
       }
     }
   };
-
-  const Notification = ({ message, isError }) =>
-    isError ? (
-      <div className="message errorMessage">{message}</div>
-    ) : (
-      <div className="message normalMessage">{message}</div>
-    );
 
   return (
     <div>
