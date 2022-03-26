@@ -1,11 +1,21 @@
 import React from "react";
 import DeleteButton from "./DeleteButton.js";
 
-const PersonLine = ({ person, handleDelete }) => {
+const PersonLine = ({
+  person,
+  handleDelete,
+  handleNotification,
+  refreshPersons,
+}) => {
   return (
     <div>
       {person.name} {person.number}{" "}
-      <DeleteButton handleDelete={handleDelete} person={person} />
+      <DeleteButton
+        person={person}
+        handleDelete={handleDelete}
+        handleNotification={handleNotification}
+        refreshPersons={refreshPersons}
+      />
     </div>
   );
 };

@@ -9,12 +9,6 @@ import PersonForm from "./components/PersonForm";
 import personService from "./services/persons.js";
 
 const App = () => {
-  useEffect(() => {
-    personService.getAll().then((initialPersons) => {
-      setPersons(initialPersons);
-    });
-  }, []);
-
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
@@ -22,15 +16,23 @@ const App = () => {
   const [message, setMessage] = useState(null);
   const [isError, setIsError] = useState(false);
 
-  const handleDelete = (id) => {
+  const refreshPersons = () =>
+    personService.getAll().then((initialPersons) => setPersons(initialPersons));
+
+  useEffect(() => {
+    refreshPersons();
+  }, []);
+
+  const handleDelete = (id, name) => {
     const temp = persons.filter((person) => person.id !== id);
-    handleNotification("Deleted Person", false);
+    handleNotification(`Deleted ${name} from phonebook`, false);
     setPersons(temp);
   };
 
   const handleFilter = (event) => {
     setFilter(event.target.value);
   };
+
   const handleChangeName = (event) => {
     setNewName(event.target.value);
   };
@@ -41,12 +43,13 @@ const App = () => {
 
   const isErrorSetter = (error) => setIsError(error);
 
-  const handleNotification = (text, isError, name = null) => {
-    name !== null ? setMessage(`${text} ${name}`) : setMessage(`${text}`);
+  const handleNotification = (text, isError) => {
+    setMessage(`${text}`);
     setTimeout(() => setMessage(null), 2000);
     isErrorSetter(isError);
   };
 
+  // --------------------------------------------------------
   const handleSubmitName = (event) => {
     event.preventDefault();
 
@@ -64,26 +67,35 @@ const App = () => {
         // console.log(returnedPerson);
         setPersons(persons.concat(returnedPerson));
 
-        handleNotification("Added", false, personObj.name);
+        handleNotification(`Added ${personObj.name}`, false);
       });
 
       setNewName("");
       setNewNumber("");
     } else {
-      console.log(index);
-      console.log(persons[index].id, persons[index].name);
       // modal to update record
       const confirmed =
         window.confirm(
           `${personObj.name} is already added to the phonebook. Update the old number ?`
         ) &&
-        personService.update(persons[index].id, personObj).then((response) => {
-          console.log(response);
-          const temp = [...persons];
-          temp[index].number = personObj.number;
-          setPersons(temp);
-          handleNotification("Updated", false, personObj.name);
-        });
+        // yes - so update
+        personService
+          .update(persons[index].id, personObj)
+          .then((response) => {
+            console.log(response);
+            const temp = [...persons];
+            temp[index].number = personObj.number;
+            setPersons(temp);
+            handleNotification(`Updated ${personObj.name}'s number`, false);
+          })
+          .catch((error) => {
+            handleNotification(
+              `Information of ${persons[index].name} has already been removed from server`,
+              true
+            );
+
+            refreshPersons();
+          });
 
       if (confirmed) {
         setNewName("");
@@ -121,6 +133,8 @@ const App = () => {
         persons={persons}
         filter={filter}
         handleDelete={handleDelete}
+        handleNotification={handleNotification}
+        refreshPersons={refreshPersons}
       />
     </div>
   );

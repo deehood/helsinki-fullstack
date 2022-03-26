@@ -1,6 +1,12 @@
 import React from "react";
 import PersonLine from "./PersonLine";
-const PersonList = ({ persons, filter, handleDelete }) => {
+const PersonList = ({
+  persons,
+  filter,
+  handleDelete,
+  handleNotification,
+  refreshPersons,
+}) => {
   return (
     <>
       {persons
@@ -12,6 +18,8 @@ const PersonList = ({ persons, filter, handleDelete }) => {
             key={persons.id}
             person={person}
             handleDelete={handleDelete}
+            handleNotification={handleNotification}
+            refreshPersons={refreshPersons}
           />
         ))}
     </>
