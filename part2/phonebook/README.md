@@ -1,22 +1,5 @@
 /phonebook - after submission ...
 
-Line  13 should be key={person.id} - give a warning on load and F5 (refresh) otherwise ...
+Line  18 should be key={person.id} - give a warning on load and F5 (refresh) otherwise ...
  
- return (
-    <>
-      {persons
-        .filter((person) =>
-          person.name.toLowerCase().includes(filter.toLowerCase())
-        )
-        .map((person) => (
-          <PersonLine
-            key={persons.id}
-            person={person}
-            handleDelete={handleDelete}
-            handleNotification={handleNotification}
-            refreshPersons={refreshPersons}
-          />
-        ))}
-    </>
-  );
-};
+![image](https://user-images.githubusercontent.com/24314564/160279934-815aff73-c6ff-4869-88cf-0d911ed943b5.png)
